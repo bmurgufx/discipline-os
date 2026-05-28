@@ -1,4 +1,3 @@
-import { AlertTriangle } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { Card, Header, ProgressBar, Screen, StatRow, colors } from '../components/ui';
 import { meals, targets } from '../constants/mockData';
@@ -22,7 +21,7 @@ export default function FoodScreen() {
       </Card>
       <Card style={over ? styles.warning : undefined}>
         <View style={styles.warningRow}>
-          <AlertTriangle color={over ? colors.red : colors.amber} size={22} strokeWidth={2} />
+          <View style={[styles.warningDot, { backgroundColor: over ? colors.red : colors.amber }]} />
           <Text style={styles.feedback}>
             {over
               ? 'You crossed the line. Log it, stop eating, and do not pretend tomorrow can erase today.'
@@ -57,6 +56,12 @@ const styles = StyleSheet.create({
   warningRow: {
     flexDirection: 'row',
     gap: 12,
+  },
+  warningDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginTop: 5,
   },
   feedback: {
     flex: 1,

@@ -1,21 +1,20 @@
-import { ShieldCheck } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { ActionLink, Card, Header, Screen, colors } from '../components/ui';
+import { ActionLink, Card, IconBadge, Screen, colors } from '../components/ui';
 
 export default function OnboardingScreen() {
   return (
-    <Screen>
-      <View style={styles.mark}>
-        <ShieldCheck color={colors.accent} size={34} strokeWidth={2} />
+    <Screen centered showDock={false}>
+      <View style={styles.hero}>
+        <IconBadge label="DOS" large />
+        <Text style={styles.appName}>Discipline OS</Text>
+        <Text style={styles.headline}>Build the man who does not negotiate with his standards.</Text>
+        <Text style={styles.subtitle}>
+          Your life becomes what you track. Score the day, finish the basics, and remove the hiding places.
+        </Text>
       </View>
-      <Header
-        eyebrow="Discipline OS"
-        title="Build the man who does not negotiate with his standards."
-        subtitle="Your life becomes what you track."
-      />
       <Card style={styles.statement}>
         <Text style={styles.statementText}>
-          This app is a private execution board for food, steps, lifting, money, coding, Bible reading, and the goals that must be written before the day starts.
+          Track food, steps, lifting, money, coding, Bible reading, and the goals that must be written before the day starts.
         </Text>
       </Card>
       <ActionLink href="/dashboard" label="Enter Discipline OS" />
@@ -24,24 +23,41 @@ export default function OnboardingScreen() {
 }
 
 const styles = StyleSheet.create({
-  mark: {
-    width: 68,
-    height: 68,
-    borderRadius: 24,
+  hero: {
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#171B13',
-    borderWidth: 1,
-    borderColor: '#303821',
-    marginBottom: 18,
+    gap: 14,
+    paddingHorizontal: 6,
+  },
+  appName: {
+    color: colors.accent,
+    fontSize: 15,
+    fontWeight: '900',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    marginTop: 4,
+  },
+  headline: {
+    color: colors.text,
+    fontSize: 34,
+    lineHeight: 38,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: colors.muted,
+    fontSize: 16,
+    lineHeight: 23,
+    textAlign: 'center',
+    fontWeight: '700',
   },
   statement: {
-    marginTop: 8,
+    marginTop: 12,
   },
   statementText: {
     color: colors.text,
-    fontSize: 18,
-    lineHeight: 27,
+    fontSize: 16,
+    lineHeight: 24,
     fontWeight: '800',
+    textAlign: 'center',
   },
 });

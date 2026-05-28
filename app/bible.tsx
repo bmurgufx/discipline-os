@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { BookOpenCheck } from 'lucide-react-native';
 import { Card, FormInput, Header, ProgressBar, Screen, colors } from '../components/ui';
 import { targets } from '../constants/mockData';
 
@@ -17,7 +16,7 @@ export default function BibleScreen() {
       />
       <Card style={styles.timer}>
         <View style={styles.iconCircle}>
-          <BookOpenCheck color={colors.accent} size={34} strokeWidth={2} />
+          <Text style={styles.iconText}>BIB</Text>
         </View>
         <Text style={styles.time}>08:00</Text>
         <Text style={styles.muted}>target minutes today</Text>
@@ -37,6 +36,12 @@ export default function BibleScreen() {
 const styles = StyleSheet.create({
   timer: {
     alignItems: 'center',
+  },
+  iconText: {
+    color: colors.accent,
+    fontSize: 17,
+    fontWeight: '900',
+    letterSpacing: 1.2,
   },
   iconCircle: {
     width: 72,

@@ -1,8 +1,8 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { LucideIcon } from 'lucide-react-native';
 import { PropsWithChildren } from 'react';
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,9 +12,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const colors = {
-  background: '#090A0C',
+  background: '#08090B',
   panel: '#121419',
   panelSoft: '#181B21',
   border: '#2B3038',
@@ -28,13 +29,31 @@ export const colors = {
   green: '#86D37E',
 };
 
-export function Screen({ children }: PropsWithChildren) {
+const dockItems = [
+  { label: 'Today', href: '/dashboard' },
+  { label: 'Goals', href: '/morning-goals' },
+  { label: 'Food', href: '/food' },
+  { label: 'Train', href: '/training' },
+  { label: 'Score', href: '/daily-score' },
+];
+
+export function Screen({
+  children,
+  centered = false,
+  showDock = true,
+}: PropsWithChildren<{ centered?: boolean; showDock?: boolean }>) {
   return (
     <View style={styles.root}>
       <StatusBar style="light" />
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {children}
-      </ScrollView>
+      <SafeAreaView style={styles.phone}>
+        <ScrollView
+          contentContainerStyle={[styles.scroll, centered && styles.centeredScroll, showDock && styles.scrollWithDock]}
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+        {showDock ? <BottomDock /> : null}
+      </SafeAreaView>
     </View>
   );
 }
@@ -72,7 +91,7 @@ export function MetricCard({
   status,
   progress,
   route,
-  icon: Icon,
+  icon,
 }: {
   title: string;
   value: string;
@@ -80,15 +99,13 @@ export function MetricCard({
   status: string;
   progress: number;
   route: string;
-  icon: LucideIcon;
+  icon: string;
 }) {
   return (
     <Link href={route as never} asChild>
       <Pressable style={({ pressed }) => [styles.metric, pressed && styles.pressed]}>
         <View style={styles.metricTop}>
-          <View style={styles.iconBox}>
-            <Icon color={colors.accent} size={18} strokeWidth={2} />
-          </View>
+          <IconBadge label={icon} />
           <Text style={styles.metricStatus}>{status}</Text>
         </View>
         <Text style={styles.metricTitle}>{title}</Text>
@@ -100,6 +117,14 @@ export function MetricCard({
   );
 }
 
+export function IconBadge({ label, large = false }: { label: string; large?: boolean }) {
+  return (
+    <View style={[styles.iconBox, large && styles.iconBoxLarge]}>
+      <Text style={[styles.iconText, large && styles.iconTextLarge]}>{label}</Text>
+    </View>
+  );
+}
+
 export function ActionLink({ href, label }: { href: string; label: string }) {
   return (
     <Link href={href as never} asChild>
@@ -107,6 +132,20 @@ export function ActionLink({ href, label }: { href: string; label: string }) {
         <Text style={styles.buttonText}>{label}</Text>
       </Pressable>
     </Link>
+  );
+}
+
+export function BottomDock() {
+  return (
+    <View style={styles.dock}>
+      {dockItems.map((item) => (
+        <Link key={item.href} href={item.href as never} asChild>
+          <Pressable style={({ pressed }) => [styles.dockItem, pressed && styles.pressed]}>
+            <Text style={styles.dockLabel}>{item.label}</Text>
+          </Pressable>
+        </Link>
+      ))}
+    </View>
   );
 }
 
@@ -182,12 +221,31 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.background,
+    alignItems: 'center',
+  },
+  phone: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 430,
+    backgroundColor: colors.background,
+    borderLeftWidth: Platform.OS === 'web' ? 1 : 0,
+    borderRightWidth: Platform.OS === 'web' ? 1 : 0,
+    borderColor: '#191D23',
   },
   scroll: {
-    paddingHorizontal: 20,
-    paddingTop: 62,
-    paddingBottom: 44,
-    gap: 18,
+    flexGrow: 1,
+    paddingHorizontal: 18,
+    paddingTop: 28,
+    paddingBottom: 34,
+    gap: 16,
+  },
+  centeredScroll: {
+    justifyContent: 'center',
+    paddingTop: 34,
+    paddingBottom: 34,
+  },
+  scrollWithDock: {
+    paddingBottom: 104,
   },
   header: {
     gap: 8,
@@ -202,8 +260,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text,
-    fontSize: 36,
-    lineHeight: 40,
+    fontSize: 31,
+    lineHeight: 35,
     fontWeight: '900',
     letterSpacing: 0,
   },
@@ -216,8 +274,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.panel,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 24,
-    padding: 18,
+    borderRadius: 22,
+    padding: 16,
     gap: 14,
   },
   sectionTitle: {
@@ -238,12 +296,12 @@ const styles = StyleSheet.create({
   },
   metric: {
     width: '48%',
-    minHeight: 178,
+    minHeight: 164,
     backgroundColor: colors.panel,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 24,
-    padding: 16,
+    borderRadius: 20,
+    padding: 14,
     gap: 8,
   },
   pressed: {
@@ -257,14 +315,30 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   iconBox: {
-    width: 34,
-    height: 34,
-    borderRadius: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#20251D',
     borderWidth: 1,
     borderColor: '#323C25',
+  },
+  iconBoxLarge: {
+    width: 86,
+    height: 86,
+    borderRadius: 28,
+    alignSelf: 'center',
+  },
+  iconText: {
+    color: colors.accent,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.7,
+  },
+  iconTextLarge: {
+    fontSize: 20,
+    letterSpacing: 1.4,
   },
   metricStatus: {
     flex: 1,
@@ -281,8 +355,8 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     color: colors.text,
-    fontSize: 26,
-    lineHeight: 30,
+    fontSize: 23,
+    lineHeight: 27,
     fontWeight: '900',
     fontVariant: ['tabular-nums'],
   },
@@ -292,7 +366,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-    minHeight: 54,
+    minHeight: 60,
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
@@ -300,7 +374,39 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#12150F',
-    fontSize: 15,
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  dock: {
+    position: 'absolute',
+    left: 14,
+    right: 14,
+    bottom: Platform.OS === 'web' ? 18 : 10,
+    minHeight: 66,
+    borderRadius: 24,
+    backgroundColor: '#101217',
+    borderWidth: 1,
+    borderColor: '#29301F',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    shadowColor: '#000000',
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 8,
+  },
+  dockItem: {
+    flex: 1,
+    minHeight: 48,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dockLabel: {
+    color: colors.text,
+    fontSize: 11,
     fontWeight: '900',
   },
   statRow: {

@@ -1,17 +1,3 @@
-import {
-  BookOpen,
-  Brain,
-  BriefcaseBusiness,
-  CalendarDays,
-  Code2,
-  Dumbbell,
-  Flame,
-  Footprints,
-  Goal,
-  Settings,
-  Utensils,
-} from 'lucide-react-native';
-
 export const targets = {
   weight: '84 kg',
   calories: 1600,
@@ -30,7 +16,7 @@ export const todayMetrics = [
     progress: 0.89,
     status: 'Under control',
     route: '/food',
-    icon: Utensils,
+    icon: 'CAL',
   },
   {
     title: 'Steps',
@@ -39,7 +25,7 @@ export const todayMetrics = [
     progress: 0.78,
     status: '2,160 left',
     route: '/steps',
-    icon: Footprints,
+    icon: 'STP',
   },
   {
     title: 'Training',
@@ -48,7 +34,7 @@ export const todayMetrics = [
     progress: 0.67,
     status: 'Finish accessories',
     route: '/training',
-    icon: Dumbbell,
+    icon: 'LFT',
   },
   {
     title: 'Work/Money',
@@ -57,7 +43,7 @@ export const todayMetrics = [
     progress: 0.43,
     status: 'Pipeline weak',
     route: '/work-money',
-    icon: BriefcaseBusiness,
+    icon: 'RON',
   },
   {
     title: 'Vibe Coding',
@@ -66,7 +52,7 @@ export const todayMetrics = [
     progress: 0.6,
     status: 'Build one feature',
     route: '/vibe-coding',
-    icon: Code2,
+    icon: 'DEV',
   },
   {
     title: 'Bible Reading',
@@ -75,7 +61,7 @@ export const todayMetrics = [
     progress: 1,
     status: 'Completed',
     route: '/bible',
-    icon: BookOpen,
+    icon: 'BIB',
   },
   {
     title: 'Morning Goals',
@@ -84,14 +70,14 @@ export const todayMetrics = [
     progress: 0.7,
     status: 'Write all ten',
     route: '/morning-goals',
-    icon: Goal,
+    icon: 'GOL',
   },
 ];
 
 export const quickRoutes = [
-  { title: 'Daily Score', subtitle: 'Scoring rules and penalties', route: '/daily-score', icon: Brain },
-  { title: 'Calendar', subtitle: 'Monthly execution history', route: '/calendar', icon: CalendarDays },
-  { title: 'Settings', subtitle: 'Goals and notification mocks', route: '/settings', icon: Settings },
+  { title: 'Daily Score', subtitle: 'Scoring rules and penalties', route: '/daily-score', icon: 'SCR' },
+  { title: 'Calendar', subtitle: 'Monthly execution history', route: '/calendar', icon: 'CAL' },
+  { title: 'Settings', subtitle: 'Goals and notification mocks', route: '/settings', icon: 'SET' },
 ];
 
 export const meals = [

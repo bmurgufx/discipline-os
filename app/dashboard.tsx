@@ -38,11 +38,10 @@ export default function DashboardScreen() {
       <SectionTitle>System</SectionTitle>
       <View style={styles.quickGrid}>
         {quickRoutes.map((item) => {
-          const Icon = item.icon;
           return (
             <Link key={item.title} href={item.route as never} asChild>
               <Pressable style={({ pressed }) => [styles.quickCard, pressed && styles.pressed]}>
-                <Icon color={colors.accent} size={20} strokeWidth={2} />
+                <Text style={styles.quickCode}>{item.icon}</Text>
                 <Text style={styles.quickTitle}>{item.title}</Text>
                 <Text style={styles.quickSubtitle}>{item.subtitle}</Text>
                 <ProgressBar progress={item.title === 'Daily Score' ? 0.76 : 0.64} color={colors.amber} />
@@ -117,6 +116,12 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 16,
     gap: 8,
+  },
+  quickCode: {
+    color: colors.accent,
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 1,
   },
   pressed: {
     transform: [{ scale: 0.985 }],
