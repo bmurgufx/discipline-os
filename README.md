@@ -5,7 +5,7 @@ Discipline OS is a first complete Expo mobile app for personal discipline, accou
 ## Tech Stack
 
 - React Native
-- Expo SDK 55
+- Expo SDK 54
 - TypeScript
 - Expo Router
 - Local component state and mock data
