@@ -9,8 +9,24 @@ export default function OnboardingScreen() {
         <Text style={styles.appName}>Discipline OS</Text>
         <Text style={styles.headline}>Build the man who does not negotiate with his standards.</Text>
         <Text style={styles.subtitle}>
-          Your life becomes what you track. Score the day, finish the basics, and remove the hiding places.
+          Food, steps, training, money, coding, Bible, and goals tracked in one private operating system.
         </Text>
+      </View>
+      <View style={styles.strip}>
+        <View style={styles.stripItem}>
+          <Text style={styles.stripValue}>84</Text>
+          <Text style={styles.stripLabel}>kg target</Text>
+        </View>
+        <View style={styles.stripDivider} />
+        <View style={styles.stripItem}>
+          <Text style={styles.stripValue}>1600</Text>
+          <Text style={styles.stripLabel}>kcal</Text>
+        </View>
+        <View style={styles.stripDivider} />
+        <View style={styles.stripItem}>
+          <Text style={styles.stripValue}>5000</Text>
+          <Text style={styles.stripLabel}>RON</Text>
+        </View>
       </View>
       <Card style={styles.statement}>
         <Text style={styles.statementText}>
@@ -25,7 +41,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   hero: {
     alignItems: 'center',
-    gap: 14,
+    gap: 12,
     paddingHorizontal: 6,
   },
   appName: {
@@ -38,8 +54,8 @@ const styles = StyleSheet.create({
   },
   headline: {
     color: colors.text,
-    fontSize: 34,
-    lineHeight: 38,
+    fontSize: 35,
+    lineHeight: 39,
     fontWeight: '900',
     textAlign: 'center',
   },
@@ -49,6 +65,40 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     textAlign: 'center',
     fontWeight: '700',
+  },
+  strip: {
+    minHeight: 84,
+    borderRadius: 26,
+    borderWidth: 1,
+    borderColor: '#303A25',
+    backgroundColor: '#10150F',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginTop: 6,
+  },
+  stripItem: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+  },
+  stripValue: {
+    color: colors.text,
+    fontSize: 24,
+    fontWeight: '900',
+    fontVariant: ['tabular-nums'],
+  },
+  stripLabel: {
+    color: colors.dim,
+    fontSize: 11,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+  },
+  stripDivider: {
+    width: 1,
+    height: 42,
+    backgroundColor: '#2A3029',
   },
   statement: {
     marginTop: 12,

@@ -1,27 +1,28 @@
 import { Link } from 'expo-router';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { dailyScore, quickRoutes, todayMetrics } from '../constants/mockData';
-import { Card, Header, MetricCard, ProgressBar, Screen, SectionTitle, colors } from '../components/ui';
+import { Card, Header, MetricCard, ProgressBar, ScoreOrb, Screen, SectionTitle, TopBar, colors } from '../components/ui';
 
 export default function DashboardScreen() {
   const date = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).format(new Date());
 
   return (
     <Screen>
+      <TopBar status="Execution board" />
       <Header
         eyebrow={date}
         title="Today decides the month."
-        subtitle="The target is not motivation. The target is executed proof."
+        subtitle="Execute the non-negotiables before comfort starts negotiating."
       />
       <Card style={styles.scoreCard}>
-        <View>
-          <Text style={styles.scoreLabel}>Daily Score</Text>
-          <Text style={styles.score}>{dailyScore}</Text>
-          <Text style={styles.scoreMax}>out of 100</Text>
-        </View>
+        <ScoreOrb score={dailyScore} label="Daily score" status="Strong" />
         <View style={styles.scoreCopy}>
-          <Text style={styles.scoreTitle}>Strong, not elite.</Text>
+          <Text style={styles.scoreTitle}>Strong, not elite yet.</Text>
           <Text style={styles.scoreBody}>Food and Bible are controlled. Work output and unfinished training are dragging the day down.</Text>
+          <View style={styles.scoreTags}>
+            <Text style={styles.scoreTag}>Elite 90+</Text>
+            <Text style={styles.scoreTagActive}>Strong 75-89</Text>
+          </View>
         </View>
       </Card>
       <View style={styles.metrics}>
@@ -30,7 +31,7 @@ export default function DashboardScreen() {
         ))}
       </View>
       <SectionTitle>Psychological Feedback</SectionTitle>
-      <Card>
+      <Card style={styles.feedbackCard}>
         <Text style={styles.feedback}>
           You are not behind because life is difficult. You are behind where the plan is vague. Make the next action visible: finish the lift, walk the remaining steps, and send one offer before comfort gets a vote.
         </Text>
@@ -56,32 +57,13 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
   scoreCard: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 18,
+    gap: 16,
     backgroundColor: '#11140F',
     borderColor: '#313A22',
   },
-  scoreLabel: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  score: {
-    color: colors.accent,
-    fontSize: 72,
-    lineHeight: 76,
-    fontWeight: '900',
-    fontVariant: ['tabular-nums'],
-  },
-  scoreMax: {
-    color: colors.dim,
-    fontSize: 12,
-    fontWeight: '800',
-  },
   scoreCopy: {
-    flex: 1,
+    alignSelf: 'stretch',
     gap: 8,
   },
   scoreTitle: {
@@ -94,6 +76,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
   },
+  scoreTags: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 3,
+  },
+  scoreTag: {
+    color: colors.dim,
+    fontSize: 11,
+    fontWeight: '900',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: '#181C22',
+  },
+  scoreTagActive: {
+    color: '#151910',
+    fontSize: 11,
+    fontWeight: '900',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: colors.accent,
+  },
   metrics: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -105,6 +110,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 25,
     fontWeight: '700',
+  },
+  feedbackCard: {
+    backgroundColor: '#121711',
+    borderColor: '#2F3D22',
   },
   quickGrid: {
     gap: 12,

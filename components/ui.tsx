@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { PropsWithChildren } from 'react';
 import {
@@ -15,26 +15,29 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const colors = {
-  background: '#08090B',
-  panel: '#121419',
-  panelSoft: '#181B21',
-  border: '#2B3038',
-  text: '#F3F4F1',
-  muted: '#A1A7B0',
-  dim: '#636A75',
-  accent: '#D6FF6B',
-  amber: '#E6C35C',
-  orange: '#DB7C45',
-  red: '#D95F5F',
-  green: '#86D37E',
+  background: '#07080A',
+  panel: '#111419',
+  panelSoft: '#181C23',
+  panelDeep: '#0C0F13',
+  border: '#2A3038',
+  text: '#F5F7F1',
+  muted: '#A6ADB4',
+  dim: '#68707A',
+  accent: '#C7F464',
+  accentDeep: '#2A341A',
+  amber: '#E0BD59',
+  orange: '#D9804D',
+  red: '#D35F62',
+  green: '#7FCF78',
 };
 
 const dockItems = [
-  { label: 'Today', href: '/dashboard' },
-  { label: 'Goals', href: '/morning-goals' },
-  { label: 'Food', href: '/food' },
-  { label: 'Train', href: '/training' },
-  { label: 'Score', href: '/daily-score' },
+  { label: 'Today', href: '/dashboard', code: 'TD' },
+  { label: 'Goals', href: '/morning-goals', code: 'GL' },
+  { label: 'Food', href: '/food', code: 'FD' },
+  { label: 'Train', href: '/training', code: 'TR' },
+  { label: 'Work', href: '/work-money', code: 'WK' },
+  { label: 'Score', href: '/daily-score', code: 'SC' },
 ];
 
 export function Screen({
@@ -45,6 +48,8 @@ export function Screen({
   return (
     <View style={styles.root}>
       <StatusBar style="light" />
+      <View style={styles.webBackdropLeft} />
+      <View style={styles.webBackdropRight} />
       <SafeAreaView style={styles.phone}>
         <ScrollView
           contentContainerStyle={[styles.scroll, centered && styles.centeredScroll, showDock && styles.scrollWithDock]}
@@ -68,6 +73,26 @@ export function Header({ eyebrow, title, subtitle }: { eyebrow?: string; title: 
   );
 }
 
+export function TopBar({ label = 'Discipline OS', status = 'Live local system' }: { label?: string; status?: string }) {
+  return (
+    <View style={styles.topBar}>
+      <View style={styles.brandLockup}>
+        <View style={styles.brandMark}>
+          <Text style={styles.brandMarkText}>D</Text>
+        </View>
+        <View>
+          <Text style={styles.brandTitle}>{label}</Text>
+          <Text style={styles.brandStatus}>{status}</Text>
+        </View>
+      </View>
+      <View style={styles.signalPill}>
+        <View style={styles.signalDot} />
+        <Text style={styles.signalText}>ON</Text>
+      </View>
+    </View>
+  );
+}
+
 export function Card({ children, style }: PropsWithChildren<{ style?: ViewStyle }>) {
   return <View style={[styles.card, style]}>{children}</View>;
 }
@@ -80,6 +105,31 @@ export function ProgressBar({ progress, color = colors.accent }: { progress: num
   return (
     <View style={styles.track}>
       <View style={[styles.fill, { width: `${Math.max(0, Math.min(progress, 1)) * 100}%`, backgroundColor: color }]} />
+    </View>
+  );
+}
+
+export function ScoreOrb({
+  score,
+  label,
+  status,
+  progress = score / 100,
+}: {
+  score: number;
+  label: string;
+  status: string;
+  progress?: number;
+}) {
+  return (
+    <View style={styles.scoreOrbWrap}>
+      <View style={styles.scoreOrbOuter}>
+        <View style={[styles.scoreOrbProgress, { height: `${Math.max(18, Math.min(progress, 1) * 100)}%` }]} />
+        <View style={styles.scoreOrbInner}>
+          <Text style={styles.scoreOrbLabel}>{label}</Text>
+          <Text style={styles.scoreOrbValue}>{score}</Text>
+          <Text style={styles.scoreOrbStatus}>{status}</Text>
+        </View>
+      </View>
     </View>
   );
 }
@@ -136,11 +186,14 @@ export function ActionLink({ href, label }: { href: string; label: string }) {
 }
 
 export function BottomDock() {
+  const pathname = usePathname();
+
   return (
     <View style={styles.dock}>
       {dockItems.map((item) => (
         <Link key={item.href} href={item.href as never} asChild>
-          <Pressable style={({ pressed }) => [styles.dockItem, pressed && styles.pressed]}>
+          <Pressable style={({ pressed }) => [styles.dockItem, pathname === item.href && styles.dockItemActive, pressed && styles.pressed]}>
+            <Text style={[styles.dockCode, pathname === item.href && styles.dockCodeActive]}>{item.code}</Text>
             <Text style={styles.dockLabel}>{item.label}</Text>
           </Pressable>
         </Link>
@@ -226,16 +279,41 @@ const styles = StyleSheet.create({
   phone: {
     flex: 1,
     width: '100%',
-    maxWidth: 430,
+    maxWidth: 444,
     backgroundColor: colors.background,
     borderLeftWidth: Platform.OS === 'web' ? 1 : 0,
     borderRightWidth: Platform.OS === 'web' ? 1 : 0,
     borderColor: '#191D23',
+    overflow: 'hidden',
+  },
+  webBackdropLeft: {
+    display: Platform.OS === 'web' ? 'flex' : 'none',
+    position: 'absolute',
+    top: 88,
+    left: '50%',
+    width: 92,
+    height: 240,
+    marginLeft: -320,
+    borderRadius: 46,
+    backgroundColor: '#111914',
+    opacity: 0.7,
+  },
+  webBackdropRight: {
+    display: Platform.OS === 'web' ? 'flex' : 'none',
+    position: 'absolute',
+    bottom: 120,
+    right: '50%',
+    width: 112,
+    height: 280,
+    marginRight: -350,
+    borderRadius: 56,
+    backgroundColor: '#161A22',
+    opacity: 0.75,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 18,
-    paddingTop: 28,
+    paddingHorizontal: 20,
+    paddingTop: 18,
     paddingBottom: 34,
     gap: 16,
   },
@@ -249,7 +327,7 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: 8,
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   eyebrow: {
     color: colors.accent,
@@ -260,8 +338,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text,
-    fontSize: 31,
-    lineHeight: 35,
+    fontSize: 30,
+    lineHeight: 34,
     fontWeight: '900',
     letterSpacing: 0,
   },
@@ -274,9 +352,73 @@ const styles = StyleSheet.create({
     backgroundColor: colors.panel,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 22,
-    padding: 16,
+    borderRadius: 24,
+    padding: 17,
     gap: 14,
+    shadowColor: '#000000',
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 3,
+  },
+  topBar: {
+    minHeight: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  brandLockup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  brandMark: {
+    width: 38,
+    height: 38,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accentDeep,
+    borderWidth: 1,
+    borderColor: '#44572B',
+  },
+  brandMarkText: {
+    color: colors.accent,
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  brandTitle: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  brandStatus: {
+    color: colors.dim,
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  signalPill: {
+    height: 32,
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    backgroundColor: '#171C15',
+    borderWidth: 1,
+    borderColor: '#303E22',
+  },
+  signalDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: colors.accent,
+  },
+  signalText: {
+    color: colors.accent,
+    fontSize: 11,
+    fontWeight: '900',
   },
   sectionTitle: {
     color: colors.text,
@@ -296,11 +438,11 @@ const styles = StyleSheet.create({
   },
   metric: {
     width: '48%',
-    minHeight: 164,
-    backgroundColor: colors.panel,
+    minHeight: 158,
+    backgroundColor: '#11151B',
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 20,
+    borderRadius: 22,
     padding: 14,
     gap: 8,
   },
@@ -320,7 +462,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#20251D',
+    backgroundColor: colors.accentDeep,
     borderWidth: 1,
     borderColor: '#323C25',
   },
@@ -366,11 +508,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-    minHeight: 60,
-    borderRadius: 18,
+    minHeight: 64,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.accent,
+    shadowColor: colors.accent,
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
   },
   buttonText: {
     color: '#12150F',
@@ -379,18 +526,18 @@ const styles = StyleSheet.create({
   },
   dock: {
     position: 'absolute',
-    left: 14,
-    right: 14,
+    left: 12,
+    right: 12,
     bottom: Platform.OS === 'web' ? 18 : 10,
-    minHeight: 66,
-    borderRadius: 24,
-    backgroundColor: '#101217',
+    minHeight: 72,
+    borderRadius: 26,
+    backgroundColor: '#0F1217',
     borderWidth: 1,
     borderColor: '#29301F',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 8,
+    paddingHorizontal: 7,
     shadowColor: '#000000',
     shadowOpacity: 0.35,
     shadowRadius: 18,
@@ -399,14 +546,80 @@ const styles = StyleSheet.create({
   },
   dockItem: {
     flex: 1,
-    minHeight: 48,
-    borderRadius: 17,
+    minHeight: 56,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
+  },
+  dockItemActive: {
+    backgroundColor: '#1B2415',
+    borderWidth: 1,
+    borderColor: '#344522',
+  },
+  dockCode: {
+    color: colors.dim,
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+  dockCodeActive: {
+    color: colors.accent,
+  },
+  dockLabel: {
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: '900',
+  },
+  scoreOrbWrap: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dockLabel: {
+  scoreOrbOuter: {
+    width: 164,
+    height: 164,
+    borderRadius: 82,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    backgroundColor: '#252B21',
+    borderWidth: 1,
+    borderColor: '#3B4727',
+  },
+  scoreOrbProgress: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#536A2B',
+  },
+  scoreOrbInner: {
+    width: 132,
+    height: 132,
+    borderRadius: 66,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0C0F0B',
+    borderWidth: 1,
+    borderColor: '#2F3B20',
+  },
+  scoreOrbLabel: {
+    color: colors.dim,
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1.1,
+    textTransform: 'uppercase',
+  },
+  scoreOrbValue: {
     color: colors.text,
-    fontSize: 11,
+    fontSize: 56,
+    lineHeight: 62,
+    fontWeight: '900',
+    fontVariant: ['tabular-nums'],
+  },
+  scoreOrbStatus: {
+    color: colors.accent,
+    fontSize: 13,
     fontWeight: '900',
   },
   statRow: {
